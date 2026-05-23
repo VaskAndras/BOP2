@@ -1,0 +1,23 @@
+{
+"version": "2.0.0",
+"tasks": [
+{
+"label": "C++ Forditas es Futtatas",
+"type": "shell",
+"command": "mkdir -p \"${fileDirname}/.bin\" && /usr/bin/clang++ -std=c++14 -fcolor-diagnostics -g \"${fileDirname}\"/*.cpp -o \"${fileDirname}/.bin/main\" && \"${fileDirname}/.bin/main\"",
+"group": {
+"kind": "build",
+"isDefault": true
+},
+"presentation": {
+"reveal": "always",
+"focus": true,
+"panel": "shared",
+"clear": true
+},
+"problemMatcher": [
+"$gcc"
+]
+}
+]
+}
