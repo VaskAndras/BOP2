@@ -9,22 +9,13 @@
 #include "converter.h"
 #include "engine.h"
 
-// CUSTOM EXCEPTION: Demonstrating inheritance and polymorphism
-class MarkdownException : public std::exception {
-private:
-    std::string message;
-public:
-    MarkdownException(const std::string& msg) : message(msg) {}
-    const char* what() const noexcept override {
-        return message.c_str();
-    }
-};
+
 
 int main() {
     engine mdEngine;
     std::vector<Converter*> converters;
     
-
+// Initializing all converters and adding them to the vector
     converters.push_back(new Bold_beg_conv());
     converters.push_back(new Bold_end_conv());
     converters.push_back(new Italic_beg_conv());
@@ -37,47 +28,54 @@ int main() {
     converters.push_back(new H2_end_conv());
     converters.push_back(new H1_beg_conv());
     converters.push_back(new H1_end_conv());
+   
+    
+    // File paths for input and output
+    std::string inputPath;
+    std::string outputPath;
+    
+    std::cout << "Please enter the input Markdown (.md) file name or path: ";
+    std::cin >> inputPath;
+    
+    std::cout << "Please enter the desired output HTML (.html) file name: ";
+    std::cin >> outputPath;
     
     try {
-        std::cout << "--- Starting Markdown Converter ---" << std::endl;
-        
-        // 1. FILE READING (File Management)
-        std::ifstream inputFile("/Users/andrasvasko/megafeltoltes/prog/BME BOP2/Nagyházi/input.md");
+        // Attempt to open the input file and read its contents
+        std::ifstream inputFile(inputPath);
         if (!inputFile.is_open()) {
-            throw MarkdownException("Failed to open 'input.md'! (Create an input.md file in the folder!)");
+            throw MarkdownException("Could not open the specified input file: '" + inputPath + "'. Please check the file path and try again.");
         }
-        
+        // Read the entire file content into a string
         std::stringstream buffer;
         buffer << inputFile.rdbuf();
         std::string text = buffer.str();
         inputFile.close();
-        
+        // Check if the file is empty
         if (text.empty()) {
-            throw MarkdownException("The 'input.md' file is empty!");
+            throw MarkdownException("The specified input file is empty!");
         }
-
-        // 2. TEXT PROCESSING
+        // Process the text with the engine
         mdEngine.createmap(text, converters);
         mdEngine.checkmap(); 
-        
-        // 3. FILE WRITING (File Management)
-        std::ofstream outputFile("output.html");
+        // Attempt to create and write to the output file
+        std::ofstream outputFile(outputPath);
         if (!outputFile.is_open()) {
-            throw MarkdownException("Failed to create 'output.html' file!");
+            throw MarkdownException("Could not create the specified output file: '" + outputPath + "'. Please check the file path and try again.");
         }
-        
+        // Print the converted text to the output file
         mdEngine.print(text, outputFile);
         outputFile.close();
-        
-        std::cout << "Success! The converted text has been saved to 'output.html'." << std::endl;
+        // Inform the user of successful conversion and file creation
+        std::cout << "Success! The converted text has been saved to the file: '" << outputPath << "'\n" << std::endl;
         
     } catch (const MarkdownException& e) {
-        std::cerr << "\n[CUSTOM EXCEPTION CAUGHT] " << e.what() << "\n";
+        std::cerr << e.what() << "\n\n";
     } catch (const std::exception& e) {
-        std::cerr << "\n[SYSTEM ERROR] " << e.what() << "\n";
+        std::cerr << e.what() << "\n\n";
     }
     
-    // DYNAMIC MEMORY DEALLOCATION (Mandatory requirement)
+    // Clean up dynamically allocated converters
     for (Converter* c : converters) {
         delete c;
     }
