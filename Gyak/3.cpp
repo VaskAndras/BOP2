@@ -34,7 +34,7 @@ vector vector::operator*(float a){
     vector d;
     d.x = this->x*a;
     d.y = this->y*a;
-
+return d;
 }
 
 vector operator*(float a, vector v) {

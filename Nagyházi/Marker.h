@@ -1,8 +1,10 @@
 #ifndef MARKER_H
 #define MARKER_H
+
+#include <string>
+
 class Marker {
 public:
-    // basic attributes of a marker: its position in the text, its length, and its type (e.g., "italic", "bold")
     int position;
     int length;
     std::string type;
@@ -10,26 +12,50 @@ public:
 
     virtual ~Marker() = default;
     
-    // Constructor to initialize the marker with its position, length, and type
     Marker(int pos, int len, std::string t, std::string html) : position(pos), length(len), type(t), html_tag(html) {}
 
-    // Getter methods to access the marker's attributes
     int getPosition() const;
     int getLength() const;
     std::string getType() const;
-
 };
 
 class Italic : public Marker {
 public:
-    // Constructor to initialize an italic marker with its position and length, and set the type to "italic"
     Italic(int pos, int len) : Marker(pos, len, "italic", "<i>") {}
 }; 
 
 class italic_end : public Marker {
 public:
-    // Constructor to initialize an italic end marker with its position and length, and set the type
-    // to "italic_end"
     italic_end(int pos, int len) : Marker(pos, len, "italic_end", "</i>"){}
+};
+
+// --- Félkövér ---
+class Bold : public Marker {
+public:
+    Bold(int pos, int len) : Marker(pos, len, "bold", "<b>") {}
+}; 
+class bold_end : public Marker {
+public:
+    bold_end(int pos, int len) : Marker(pos, len, "bold_end", "</b>") {}
+};
+
+// --- Áthúzott ---
+class Strike : public Marker {
+public:
+    Strike(int pos, int len) : Marker(pos, len, "strike", "<s>") {}
+}; 
+class strike_end : public Marker {
+public:
+    strike_end(int pos, int len) : Marker(pos, len, "strike_end", "</s>") {}
+};
+
+// --- Címsor 1 ---
+class H1 : public Marker {
+public:
+    H1(int pos, int len) : Marker(pos, len, "h1", "<h1>") {}
+}; 
+class h1_end : public Marker {
+public:
+    h1_end(int pos, int len) : Marker(pos, len, "h1_end", "</h1>\n") {}
 };
 #endif

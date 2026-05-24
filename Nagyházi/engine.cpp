@@ -1,8 +1,7 @@
-
-#include <string>
-#include <vector>
-#include <iostream> 
-#include <engine.h>
+#include "engine.h"
+#include <algorithm>
+#include <map>
+#include <iostream>
 
 engine::~engine(){
     for(Marker* m: map){
@@ -10,47 +9,64 @@ engine::~engine(){
     }
 }
 
-void engine::addMarker(Marker* marker) {map.push_back(marker);}
+void engine::addMarker(Marker* marker) {
+    map.push_back(marker);
+}
 
 void engine::createmap(std::string text, std::vector<Converter*> converters) {
-        // This method will go through the text and use the converters to create markers for any special characters it finds
-        for (int i = 0; i < text.size(); i++) {
-            for (Converter* converter : converters) {
-                // this uses the createMarker method of the converter to check if there is a marker at the current position in the text
-                Marker* marker = converter->createMarker(text, i);
-                //This is for the nullpointer, because createMarker will return nullptr if there is no marker.
-                if (marker != nullptr) {
-                    addMarker(marker);
-                    // Move the index forward by the length of the marker to avoid checking the same characters again
-                    i += marker->getLength() - 1; 
-                    break; // If a marker is created, we can stop checking other converters for this position
-                }
+    for (int i = 0; i < text.size(); i++) {
+        for (Converter* converter : converters) {
+            Marker* marker = converter->createMarker(text, i);
+            if (marker != nullptr) {
+                addMarker(marker);
+                i += marker->getLength() - 1; 
+                break; 
             }
         }
     }
+}
 
-    void engine::checkmap(std::vector<Converter*> converters) {
-        // This method will check the map for any markers that are not properly closed 
-        for  (int i = 0; i < map.size(); i++) {
-            for (int j = i + 1; j < map.size(); j++) {
-                if (map[i]->getType() == converters[j]->type) {
-                    converters[j]->form = !converters[j]->form; // Toggle the form to indicate whether we are inside a marker or not
-                }
+void engine::checkmap() {
+    std::map<std::string, std::vector<int>> open_tags;
+    std::vector<int> to_delete;
+
+    for (int i = 0; i < map.size(); i++) {
+        std::string type = map[i]->getType();
+        
+        if (type.length() >= 4 && type.substr(type.length() - 4) == "_end") {
+            std::string base_type = type.substr(0, type.length() - 4);
+            
+            if (!open_tags[base_type].empty()) {
+                open_tags[base_type].pop_back();
+            } else {
+                to_delete.push_back(i);
             }
+        } else {
+            open_tags[type].push_back(i);
         }
     }
 
-    void engine::print(std::string text) {
-        // This method will print the text with the appropriate HTML tags based on the markers in the map
-        int currentIndex = 0; // Keep track of the current index in the text
-        for (Marker* marker : map) {
-            // Print the text before the marker
-            std::cout << text.substr(currentIndex, marker->getPosition() - currentIndex);
-            // Print the HTML tag for the marker
-            std::cout << marker->html_tag;
-            // Update the current index to be after the marker
-            currentIndex = marker->getPosition() + marker->getLength();
+    // C++14 compatible loop (Warning fixed)
+    for (auto const& pair : open_tags) {
+        for (int index : pair.second) {
+            to_delete.push_back(index);
         }
-        // Print any remaining text after the last marker
-        std::cout << text.substr(currentIndex);
     }
+
+    std::sort(to_delete.rbegin(), to_delete.rend());
+
+    for (int index : to_delete) {
+        delete map[index];
+        map.erase(map.begin() + index);
+    }
+}
+
+void engine::print(std::string text, std::ostream& os) {
+    int currentIndex = 0;
+    for (Marker* marker : map) {
+        os << text.substr(currentIndex, marker->getPosition() - currentIndex);
+        os << marker->html_tag;
+        currentIndex = marker->getPosition() + marker->getLength();
+    }
+    os << text.substr(currentIndex);
+}

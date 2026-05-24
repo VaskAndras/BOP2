@@ -1,23 +1,24 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <string>
+#include <vector>
+#include <iostream>
+#include "Marker.h"
+#include "converter.h"
+
 class engine {
 public:
-    std::vector<Marker*> map; // A vector to store pointers to Marker objects
+    std::vector<Marker*> map;
     
     ~engine();
     
-    // Method to add a marker to the map
     void addMarker(Marker* marker);
-
-    // Method 
     void createmap(std::string text, std::vector<Converter*> converters);
-
-    void checkmap(std::vector<Converter*> converters);
-
-    void print(std::string text);
+    void checkmap(); 
     
-
-}
+    // Updated: Supports ostream for file writing (defaults to std::cout)
+    void print(std::string text, std::ostream& os = std::cout);
+};
 
 #endif

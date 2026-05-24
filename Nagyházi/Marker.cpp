@@ -4,8 +4,8 @@
 #include <iostream>
 
 
-// Getter methods to access the marker's attributes
+#include "Marker.h"
+
 int Marker::getPosition() const { return position; }
 int Marker::getLength() const { return length; }
-std::string Marker::getLength() const { return type; }
-
+std::string Marker::getType() const { return type; } 

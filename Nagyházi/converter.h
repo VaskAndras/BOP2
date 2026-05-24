@@ -28,6 +28,25 @@ public:
     Italic_end_conv();
     Marker* createMarker(std::string text, int pos) override;
 };
+class Bold_beg_conv : public Converter {
+public: Bold_beg_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+class Bold_end_conv : public Converter {
+public: Bold_end_conv(); Marker* createMarker(std::string text, int pos) override;
+};
 
+class Strike_beg_conv : public Converter {
+public: Strike_beg_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+class Strike_end_conv : public Converter {
+public: Strike_end_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+
+class H1_beg_conv : public Converter {
+public: H1_beg_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+class H1_end_conv : public Converter {
+public: H1_end_conv(); Marker* createMarker(std::string text, int pos) override;
+};
 #endif 
 
