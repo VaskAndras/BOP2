@@ -24,14 +24,19 @@ int main() {
     engine mdEngine;
     std::vector<Converter*> converters;
     
-    converters.push_back(new H1_beg_conv());
-    converters.push_back(new H1_end_conv());
+
     converters.push_back(new Bold_beg_conv());
     converters.push_back(new Bold_end_conv());
     converters.push_back(new Italic_beg_conv());
     converters.push_back(new Italic_end_conv());
     converters.push_back(new Strike_beg_conv());
     converters.push_back(new Strike_end_conv());
+    converters.push_back(new H3_beg_conv());
+    converters.push_back(new H3_end_conv());
+    converters.push_back(new H2_beg_conv());
+    converters.push_back(new H2_end_conv());
+    converters.push_back(new H1_beg_conv());
+    converters.push_back(new H1_end_conv());
     
     try {
         std::cout << "--- Starting Markdown Converter ---" << std::endl;

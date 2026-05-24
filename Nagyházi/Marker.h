@@ -17,6 +17,7 @@ public:
     int getPosition() const;
     int getLength() const;
     std::string getType() const;
+    friend std::ostream& operator<<(std::ostream& os, const Marker& m);
 };
 
 class Italic : public Marker {
@@ -58,4 +59,25 @@ class h1_end : public Marker {
 public:
     h1_end(int pos, int len) : Marker(pos, len, "h1_end", "</h1>\n") {}
 };
+
+// --- Header 2 ---
+class H2 : public Marker {
+public:
+    H2(int pos, int len) : Marker(pos, len, "h2", "<h2>") {}
+}; 
+class h2_end : public Marker {
+public:
+    h2_end(int pos, int len) : Marker(pos, len, "h2_end", "</h2>\n") {}
+};
+
+// --- Header 3 ---
+class H3 : public Marker {
+public:
+    H3(int pos, int len) : Marker(pos, len, "h3", "<h3>") {}
+}; 
+class h3_end : public Marker {
+public:
+    h3_end(int pos, int len) : Marker(pos, len, "h3_end", "</h3>\n") {}
+};
+
 #endif

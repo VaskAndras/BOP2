@@ -48,5 +48,20 @@ public: H1_beg_conv(); Marker* createMarker(std::string text, int pos) override;
 class H1_end_conv : public Converter {
 public: H1_end_conv(); Marker* createMarker(std::string text, int pos) override;
 };
+
+class H2_beg_conv : public Converter {
+public: H2_beg_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+class H2_end_conv : public Converter {
+public: H2_end_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+
+class H3_beg_conv : public Converter {
+public: H3_beg_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+class H3_end_conv : public Converter {
+public: H3_end_conv(); Marker* createMarker(std::string text, int pos) override;
+};
+
 #endif 
 
